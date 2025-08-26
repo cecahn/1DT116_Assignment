@@ -14,6 +14,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <atomic>
 
 #include "ped_agent.h"
 
@@ -28,6 +29,25 @@ namespace Ped{
 	{
 	public:
 
+		// A2
+
+		float* xPos			= nullptr;  // Stores X positions
+		float* yPos 		= nullptr;  // Stores Y positions
+		size_t numAgents 	= 0;   		// Number of agents
+
+		float* xDestPos 	= nullptr;  // Stores X positions of waypoints
+    	float* yDestPos 	= nullptr;  // Stores Y positions of waypoints
+		float* destR		= nullptr;
+		
+		// A2
+		//A3
+		//int *regions = nullptr;
+		std::atomic<int>* regions;
+		int *regionSizes = nullptr; 
+		bool time_to_merge = false;
+		bool time_to_split = false;  
+		int tot_regions = 4; 
+		//A3
 		// Sets everything up
 		void setup(std::vector<Tagent*> agentsInScenario, std::vector<Twaypoint*> destinationsInScenario,IMPLEMENTATION implementation);
 		
@@ -62,15 +82,20 @@ namespace Ped{
 		std::vector<Twaypoint*> destinations;
 
 		// Moves an agent towards its next position
-		void move(Ped::Tagent *agent);
+		void move(Ped::Tagent *agent, int index);
 
 		////////////
 		/// Everything below here won't be relevant until Assignment 3
 		///////////////////////////////////////////////
 
 		// Returns the set of neighboring agents for the specified position
-		set<const Ped::Tagent*> getNeighbors(int x, int y, int dist) const;
+		set<const Ped::Tagent*> getNeighbors(int x, int y, int regionsize, int region) const;
 
+		void updateAgentPosition(Ped::Tagent* agent, int index);
+
+		void mergeRegions( int numAgents);
+
+		void splitRegions( int numAgents);
 		////////////
 		/// Everything below here won't be relevant until Assignment 4
 		///////////////////////////////////////////////
